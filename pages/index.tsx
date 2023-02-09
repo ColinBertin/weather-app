@@ -1,62 +1,48 @@
 import Head from "next/head";
-import { Inter } from "@next/font/google";
 import styles from "@/styles/Home.module.css";
-import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
+import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
 
-const inter = Inter({ subsets: ["latin"] });
+// Has to be change---------------------------------------------------------------------
+type WeatherData = any;
 
 export default function Home() {
   const [formattedCity, setFormattedCity] = useState("");
-  const [city, setCity] = useState("Tokyo");
-  const [query, setQuery] = useState("");
-  const [lonLat, SetLongLat] = useState({});
+  const [city, setCity] = useState("");
   // const [today, setToday] = useState({});
   // const [previsions, setPrevisions] = useState([]);
   // const [todayDate, setTodayDate] = useState("");
   // const [currentTime, setCurrentTime] = useState(6);
 
-  const getWeatherData = async (lonlat) => {
-    const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lonlat.lat}&lon=${lonlat.lon}&units=metric&appid=${process.env.WEATHER_API_KEY}`;
+  const getWeatherData = async (lonLat: WeatherData) => {
+    const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lonLat[0].lat}&lon=${lonLat[0].lon}&units=metric&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
 
     const response = await fetch(url);
     const data = await response.json();
-
-    return data;
+    console.log(data);
+    console.log(formattedCity);
+    // return data;
   };
 
-  const getCoords = async () => {
+  const getCoords = async (
+    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+  ) => {
+    e.preventDefault();
     const url = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
     try {
       const response = await fetch(url);
       const data = await response.json();
       setFormattedCity(`${data[0].name}, ${data[0].country}`);
-      SetLongLat({ lat: data[0].lat, lon: data[0].lon });
-      console.log(lonLat);
-      return data;
+      getWeatherData(data);
     } catch (error) {
       console.log(error);
-    }
-    getWeatherData(lonLat);
-  };
-
-  const handleSearch = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const newCity =
-        query.charAt(0).toUpperCase() + query.substring(1).toLowerCase();
-      setCity(newCity);
-      setQuery("");
     }
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
-    console.log(query);
+    setCity(e.target.value);
   };
 
-  useEffect(() => {
-    getCoords();
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <>
@@ -68,12 +54,8 @@ export default function Home() {
       </Head>
       <main className={styles.main}>
         <form action="">
-          <input
-            type="text"
-            onChange={(e) => handleChange(e)}
-            onKeyPress={(e) => handleSearch(e)}
-          />
-          <button type="submit" onClick={getCoords}>
+          <input type="text" onChange={(e) => handleChange(e)} />
+          <button type="submit" onClick={(e) => getCoords(e)}>
             Search
           </button>
         </form>
