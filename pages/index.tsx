@@ -78,7 +78,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex flex-col h-screen">
+      <main className="flex flex-col h-screen p-4">
         {isLoading ? (
           <LoadingSpinner />
         ) : (
@@ -90,8 +90,13 @@ export default function Home() {
             />
             {city && country && today && previsions && (
               <>
-                <TodayCard today={today} city={city} country={country} />
-                <div className="flex gap-5">
+                <TodayCard
+                  today={today}
+                  previsionToday={previsions[0]}
+                  city={city}
+                  country={country}
+                />
+                <div className="flex flex-wrap gap-5 justify-center">
                   {previsions.map((prevision, i) => {
                     return <PrevisionCards key={i} data={prevision} />;
                   })}

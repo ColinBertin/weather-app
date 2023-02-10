@@ -36,7 +36,7 @@ export default function PrevisionCards({ data }: PrevisionCardsProps) {
   return (
     <div>
       <div className="flex flex-col justify-around items-center mt-4 w-24 h-36 border border-gray-300 rounded-lg">
-        <div className="text-4xl">{handleIcon(data.weather[0].main)}</div>
+        <div className="text-5xl">{handleIcon(data.weather[0].main)}</div>
         <div>
           {/* <p>{unix}</p> */}
           <p>Min: {Math.round(data.temp.min)}°</p>
