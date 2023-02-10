@@ -1,5 +1,4 @@
 import Head from "next/head";
-import styles from "@/styles/Home.module.css";
 import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
 
 // Has to be change---------------------------------------------------------------------
@@ -15,18 +14,22 @@ export default function Home() {
   // const [currentTime, setCurrentTime] = useState(6);
 
   const getWeatherData = async (lonLat: WeatherData) => {
-    const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lonLat[0].lat}&lon=${lonLat[0].lon}&units=metric&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
+    try {
+      const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lonLat[0].lat}&lon=${lonLat[0].lon}&units=metric&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
 
-    const response = await fetch(url);
-    const data = await response.json();
+      const response = await fetch(url);
+      const data = await response.json();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const getCoords = async (
     e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
   ) => {
     e.preventDefault();
-    const url = `http://api.openweathermap.org/geo/1.0/direct?q=${request}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
     try {
+      const url = `http://api.openweathermap.org/geo/1.0/direct?q=${request}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
       const response = await fetch(url);
       const data = await response.json();
       getWeatherData(data);
@@ -53,14 +56,27 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <form action="">
-          <input type="text" onChange={(e) => handleChange(e)} />
-          <button type="submit" onClick={(e) => getCoords(e)}>
-            Search
-          </button>
-        </form>
-        {city && country && <h1>{`${city}, ${country}`}</h1>}
+      <main className="flex flex-col h-screen border border-red-300">
+        <div className="m-auto">
+          <form className="flex justify-center content-around gap-2">
+            <input
+              type="text"
+              id="first_name"
+              onChange={(e) => handleChange(e)}
+              className="border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
+            />
+            <button
+              type="submit"
+              onClick={(e) => getCoords(e)}
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Search
+            </button>
+          </form>
+          {city && country && (
+            <h1 className="text-red-500">{`${city}, ${country}`}</h1>
+          )}
+        </div>
       </main>
     </>
   );
