@@ -6,8 +6,9 @@ import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
 type WeatherData = any;
 
 export default function Home() {
-  const [formattedCity, setFormattedCity] = useState("");
+  const [request, setRequest] = useState("");
   const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
   // const [today, setToday] = useState({});
   // const [previsions, setPrevisions] = useState([]);
   // const [todayDate, setTodayDate] = useState("");
@@ -18,31 +19,31 @@ export default function Home() {
 
     const response = await fetch(url);
     const data = await response.json();
-    console.log(data);
-    console.log(formattedCity);
-    // return data;
   };
 
   const getCoords = async (
     e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
   ) => {
     e.preventDefault();
-    const url = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
+    const url = `http://api.openweathermap.org/geo/1.0/direct?q=${request}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
     try {
       const response = await fetch(url);
       const data = await response.json();
-      setFormattedCity(`${data[0].name}, ${data[0].country}`);
       getWeatherData(data);
+      setCity(data[0].name);
+      setCountry(data[0].country);
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setCity(e.target.value);
+    setRequest(e.target.value);
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    console.log(city, country);
+  }, [city, country]);
 
   return (
     <>
@@ -52,13 +53,14 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
+      <main>
         <form action="">
           <input type="text" onChange={(e) => handleChange(e)} />
           <button type="submit" onClick={(e) => getCoords(e)}>
             Search
           </button>
         </form>
+        {city && country && <h1>{`${city}, ${country}`}</h1>}
       </main>
     </>
   );
