@@ -11,17 +11,9 @@ import {
   TiWeatherWindy,
 } from "react-icons/ti";
 
-type TodayCardProps = {
-  city: string;
-  country: string;
-  today: {
-    temp: number;
-    humidity: number;
-    weather: [{ main: string }];
-  };
-};
+type PrevisionCardsProps = any;
 
-export default function TodayCard({ city, country, today }: TodayCardProps) {
+export default function PrevisionCards({ data }: PrevisionCardsProps) {
   const handleIcon = (condition: string) => {
     switch (condition) {
       case "Thunderstorm":
@@ -42,17 +34,15 @@ export default function TodayCard({ city, country, today }: TodayCardProps) {
   };
 
   return (
-    <div className="mt-5 py-8 border border-gray-300 rounded-lg">
-      <div className="flex justify-center pb-6 gap-6">
-        <h1 className="text-8xl">{Math.round(today.temp)}°</h1>
-        <p className="text-6xl self-center">
-          {handleIcon(today.weather[0].main)}
-        </p>
+    <div>
+      <div className="flex flex-col justify-around items-center mt-4 w-24 h-36 border border-gray-300 rounded-lg">
+        <div className="text-4xl">{handleIcon(data.weather[0].main)}</div>
+        <div>
+          {/* <p>{unix}</p> */}
+          <p>Min: {Math.round(data.temp.min)}°</p>
+          <p>Max: {Math.round(data.temp.max)}°</p>
+        </div>
       </div>
-      <div className="flex justify-around text-xl">
-        <p className="">{Math.round(today.humidity)}%</p>
-      </div>
-      <h2 className="text-red-500 text-center mt-4">{`${city}, ${country}`}</h2>
     </div>
   );
 }

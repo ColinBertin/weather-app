@@ -1,4 +1,5 @@
 import LoadingSpinner from "@/components/LoadingSpinner";
+import PrevisionCards from "@/components/PrevisionCards";
 import SearchBar from "@/components/SearchBar";
 import TodayCard from "@/components/TodayCard";
 import Head from "next/head";
@@ -24,7 +25,6 @@ export default function Home() {
   const [previsions, setPrevisions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   // const [todayDate, setTodayDate] = useState("");
-  // const [currentTime, setCurrentTime] = useState(6);
 
   const getWeatherData = async (lonLat: WeatherData[]) => {
     try {
@@ -32,6 +32,7 @@ export default function Home() {
 
       const response = await fetch(url);
       const data = await response.json();
+      const formattedDate = new Date(data.current.dt * 1000);
       setToday(data.current);
       setPrevisions(data.daily.splice(1, 7));
       setIsLoading(false);
@@ -88,7 +89,14 @@ export default function Home() {
               isLoading={isLoading}
             />
             {city && country && today && previsions && (
-              <TodayCard today={today} city={city} country={country} />
+              <>
+                <TodayCard today={today} city={city} country={country} />
+                <div className="flex gap-5">
+                  {previsions.map((prevision, i) => {
+                    return <PrevisionCards key={i} data={prevision} />;
+                  })}
+                </div>
+              </>
             )}
           </div>
         )}
