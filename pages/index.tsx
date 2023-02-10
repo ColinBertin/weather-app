@@ -1,3 +1,4 @@
+import LoadingSpinner from "@/components/LoadingSpinner";
 import SearchBar from "@/components/SearchBar";
 import TodayCard from "@/components/TodayCard";
 import Head from "next/head";
@@ -21,6 +22,7 @@ export default function Home() {
   const [country, setCountry] = useState("");
   const [today, setToday] = useState<Today>();
   const [previsions, setPrevisions] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   // const [todayDate, setTodayDate] = useState("");
   // const [currentTime, setCurrentTime] = useState(6);
 
@@ -32,14 +34,17 @@ export default function Home() {
       const data = await response.json();
       setToday(data.current);
       setPrevisions(data.daily.splice(1, 7));
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
   };
 
   const getCoords = async (
     e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
   ) => {
+    setIsLoading(true);
     e.preventDefault();
     try {
       const url = `http://api.openweathermap.org/geo/1.0/direct?q=${request}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
@@ -50,6 +55,7 @@ export default function Home() {
       setCountry(data[0].country);
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
   };
 
@@ -72,12 +78,20 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex flex-col h-screen">
-        <div className="m-auto">
-          <SearchBar handleChange={handleChange} getCoords={getCoords} />
-          {city && country && today && previsions && (
-            <TodayCard today={today} city={city} country={country} />
-          )}
-        </div>
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <div className="m-auto">
+            <SearchBar
+              handleChange={handleChange}
+              getCoords={getCoords}
+              isLoading={isLoading}
+            />
+            {city && country && today && previsions && (
+              <TodayCard today={today} city={city} country={country} />
+            )}
+          </div>
+        )}
       </main>
     </>
   );
