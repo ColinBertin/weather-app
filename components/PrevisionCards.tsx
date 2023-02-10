@@ -1,3 +1,4 @@
+import { useState, useMemo } from "react";
 import {
   TiWeatherCloudy,
   TiWeatherDownpour,
@@ -14,6 +15,9 @@ import {
 type PrevisionCardsProps = any;
 
 export default function PrevisionCards({ data }: PrevisionCardsProps) {
+  const [date, setDate] = useState(0);
+  const [month, setMonth] = useState(0);
+
   const handleIcon = (condition: string) => {
     switch (condition) {
       case "Thunderstorm":
@@ -33,12 +37,20 @@ export default function PrevisionCards({ data }: PrevisionCardsProps) {
     }
   };
 
+  useMemo(() => {
+    const formattedDate = new Date(data.dt * 1000);
+    setDate(formattedDate.getDate());
+    setMonth(formattedDate.getMonth() + 1);
+  }, []);
+
   return (
     <div>
       <div className="flex flex-col justify-around items-center mt-4 w-24 h-36 border border-gray-300 rounded-lg">
         <div className="text-5xl">{handleIcon(data.weather[0].main)}</div>
-        <div>
-          {/* <p>{unix}</p> */}
+        <div className="text-sm">
+          <p>
+            {date}/{month}
+          </p>
           <p>Min: {Math.round(data.temp.min)}°</p>
           <p>Max: {Math.round(data.temp.max)}°</p>
         </div>

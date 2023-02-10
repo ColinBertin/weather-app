@@ -18,6 +18,7 @@ type TodayCardProps = {
     temp: number;
     humidity: number;
     weather: [{ main: string }];
+    feels_like: number;
   };
   previsionToday: any;
 };
@@ -49,10 +50,15 @@ export default function TodayCard({
 
   return (
     <div className="flex justify-around flex-wrap mt-5 py-8 border border-gray-300 rounded-lg">
-      <div className="flex justify-center pb-6 gap-6">
-        <h1 className="text-8xl">{Math.round(today.temp)}°</h1>
-        <p className="text-7xl self-center">
-          {handleIcon(today.weather[0].main)}
+      <div className="pb-6 gap-6">
+        <div className="flex justify-center">
+          <h1 className="text-8xl">{Math.round(today.temp)}°</h1>
+          <p className="text-7xl self-center">
+            {handleIcon(today.weather[0].main)}
+          </p>
+        </div>
+        <p className="mt-4 text-sm">
+          Feels like {Math.round(today.feels_like)}°
         </p>
       </div>
       <div className="text-xl">

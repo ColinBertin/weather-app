@@ -14,6 +14,7 @@ type WeatherData = {
 type Today = {
   temp: number;
   humidity: number;
+  feels_like: number;
   weather: [{ main: string }];
 };
 
@@ -22,9 +23,9 @@ export default function Home() {
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
   const [today, setToday] = useState<Today>();
+  const [todayPrevision, setTodayPrevision] = useState([]);
   const [previsions, setPrevisions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  // const [todayDate, setTodayDate] = useState("");
 
   const getWeatherData = async (lonLat: WeatherData[]) => {
     try {
@@ -35,6 +36,7 @@ export default function Home() {
       const formattedDate = new Date(data.current.dt * 1000);
       setToday(data.current);
       setPrevisions(data.daily.splice(1, 7));
+      setTodayPrevision(data.daily[0]);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -65,9 +67,9 @@ export default function Home() {
   };
 
   useEffect(() => {
-    console.log(city, country);
-    console.log(today);
     console.log(previsions);
+    // console.log(today);
+    // console.log(todayPrevision);
   }, [city, country, today, previsions]);
 
   return (
@@ -79,32 +81,34 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex flex-col h-screen p-4">
-        {isLoading ? (
-          <LoadingSpinner />
-        ) : (
-          <div className="m-auto">
-            <SearchBar
-              handleChange={handleChange}
-              getCoords={getCoords}
-              isLoading={isLoading}
-            />
-            {city && country && today && previsions && (
-              <>
-                <TodayCard
-                  today={today}
-                  previsionToday={previsions[0]}
-                  city={city}
-                  country={country}
-                />
-                <div className="flex flex-wrap gap-5 justify-center">
-                  {previsions.map((prevision, i) => {
-                    return <PrevisionCards key={i} data={prevision} />;
-                  })}
-                </div>
-              </>
-            )}
-          </div>
-        )}
+        <div className="m-auto">
+          <SearchBar
+            handleChange={handleChange}
+            getCoords={getCoords}
+            isLoading={isLoading}
+          />
+          {city && country && today && previsions && (
+            <>
+              {isLoading ? (
+                <LoadingSpinner />
+              ) : (
+                <>
+                  <TodayCard
+                    today={today}
+                    previsionToday={todayPrevision}
+                    city={city}
+                    country={country}
+                  />
+                  <div className="flex flex-wrap gap-5 justify-center">
+                    {previsions.map((prevision, i) => {
+                      return <PrevisionCards key={i} data={prevision} />;
+                    })}
+                  </div>
+                </>
+              )}
+            </>
+          )}
+        </div>
       </main>
     </>
   );
