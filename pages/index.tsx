@@ -1,3 +1,4 @@
+import SearchBar from "@/components/SearchBar";
 import Head from "next/head";
 import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
 
@@ -19,6 +20,7 @@ export default function Home() {
 
       const response = await fetch(url);
       const data = await response.json();
+      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -58,21 +60,7 @@ export default function Home() {
       </Head>
       <main className="flex flex-col h-screen border border-red-300">
         <div className="m-auto">
-          <form className="flex justify-center content-around gap-2">
-            <input
-              type="text"
-              id="first_name"
-              onChange={(e) => handleChange(e)}
-              className="border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
-            />
-            <button
-              type="submit"
-              onClick={(e) => getCoords(e)}
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Search
-            </button>
-          </form>
+          <SearchBar handleChange={handleChange} getCoords={getCoords} />
           {city && country && (
             <h1 className="text-red-500">{`${city}, ${country}`}</h1>
           )}
