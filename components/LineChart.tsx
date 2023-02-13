@@ -24,7 +24,7 @@ ChartJS.register(
 type ChartsProps = any;
 
 export default function LineChart({ hourly }: ChartsProps) {
-  const hours = hourly.splice(1, 10).map((hour: any) => {
+  const hours = hourly.splice(0, 10).map((hour: any) => {
     const h = new Date(hour.dt * 1000);
     return `${h.getHours()}:00`;
   });

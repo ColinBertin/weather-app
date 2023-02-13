@@ -1,5 +1,4 @@
-// import Charts from "@/components/Charts";
-import LineChart from "@/components/LineChart";
+import LineChart from "@/components/Charts";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import PrevisionCards from "@/components/PrevisionCards";
 import SearchBar from "@/components/SearchBar";
@@ -7,7 +6,6 @@ import TodayCard from "@/components/TodayCard";
 import Head from "next/head";
 import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
 
-// Has to be change---------------------------------------------------------------------
 type WeatherData = {
   lat: number;
   lon: number;
@@ -36,10 +34,11 @@ export default function Home() {
 
       const response = await fetch(url);
       const data = await response.json();
+      console.log(data);
       setToday(data.current);
       setTodayPrevision(data.daily[0]);
       setPrevisions(data.daily.splice(1, 7));
-      setHourlyPrevisions(data);
+      setHourlyPrevisions(data.hourly);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -70,7 +69,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    console.log(hourlyPrevisions);
+    // console.log(hourlyPrevisions);
     // console.log(today);
     // console.log(todayPrevision);
   }, [city, country, today, hourlyPrevisions]);
@@ -102,10 +101,7 @@ export default function Home() {
                     city={city}
                     country={country}
                   />
-                  <>
-                    {/* <Charts hourly={hourlyPrevisions} /> */}
-                    <LineChart hourly={hourlyPrevisions} />
-                  </>
+                  <LineChart hourly={hourlyPrevisions} />
                   <div className="flex flex-wrap gap-5 justify-center">
                     {previsions.map((prevision, i) => {
                       return <PrevisionCards key={i} data={prevision} />;
