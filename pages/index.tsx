@@ -1,3 +1,5 @@
+// import Charts from "@/components/Charts";
+import LineChart from "@/components/LineChart";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import PrevisionCards from "@/components/PrevisionCards";
 import SearchBar from "@/components/SearchBar";
@@ -25,6 +27,7 @@ export default function Home() {
   const [today, setToday] = useState<Today>();
   const [todayPrevision, setTodayPrevision] = useState([]);
   const [previsions, setPrevisions] = useState([]);
+  const [hourlyPrevisions, setHourlyPrevisions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const getWeatherData = async (lonLat: WeatherData[]) => {
@@ -33,10 +36,10 @@ export default function Home() {
 
       const response = await fetch(url);
       const data = await response.json();
-      const formattedDate = new Date(data.current.dt * 1000);
       setToday(data.current);
-      setPrevisions(data.daily.splice(1, 7));
       setTodayPrevision(data.daily[0]);
+      setPrevisions(data.daily.splice(1, 7));
+      setHourlyPrevisions(data);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -67,10 +70,10 @@ export default function Home() {
   };
 
   useEffect(() => {
-    console.log(previsions);
+    console.log(hourlyPrevisions);
     // console.log(today);
     // console.log(todayPrevision);
-  }, [city, country, today, previsions]);
+  }, [city, country, today, hourlyPrevisions]);
 
   return (
     <>
@@ -99,6 +102,10 @@ export default function Home() {
                     city={city}
                     country={country}
                   />
+                  <>
+                    {/* <Charts hourly={hourlyPrevisions} /> */}
+                    <LineChart hourly={hourlyPrevisions} />
+                  </>
                   <div className="flex flex-wrap gap-5 justify-center">
                     {previsions.map((prevision, i) => {
                       return <PrevisionCards key={i} data={prevision} />;
