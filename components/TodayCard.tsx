@@ -52,7 +52,7 @@ export default function TodayCard({
     <div className="flex flex-col md:flex-row justify-around mt-5 py-8 border border-gray-300 rounded-lg bg-white">
       <div className="pb-6 gap-6">
         <div className="flex justify-center">
-          <h1 className="text-8xl">{Math.round(today.temp)}°</h1>
+          <h1 className="text-9xl">{Math.round(today.temp)}°</h1>
           <p className="text-7xl self-center">
             {handleIcon(today.weather[0].main)}
           </p>
