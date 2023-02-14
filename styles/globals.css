@@ -5,8 +5,11 @@
 body {
   background-image: url("../public/sky.jpg");
   background-repeat: no-repeat;
+  background-attachment: fixed;
   background-size: cover;
 }
+
+/* ----------------------------- SPINNER ----------------------------- */
 
   .lds-ellipsis {
     display: inline-block;
