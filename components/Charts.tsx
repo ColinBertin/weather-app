@@ -1,31 +1,28 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Chart, ChartTypeRegistry } from "chart.js/auto";
 
 type ChartsProps = any;
 
-export default function LineChart({ hourly }: ChartsProps) {
+export default function LineChart({ previsions }: ChartsProps) {
   const canvasEl = useRef<any>({});
-  const [hour, setHour] = useState(0);
-
-  //   console.log(hourly);
-
-  const hours = hourly.splice(1, 10).map((hour: { dt: number }) => {
-    const h = new Date(hour.dt * 1000);
-    return h.getHours();
-  });
 
   useEffect(() => {
     const ctx = canvasEl.current.getContext("2d");
 
-    const minTemp = [
-      60.0, 60.2, 59.1, 61.4, 59.9, 60.2, 59.8, 58.6, 59.6, 59.2,
-    ];
-    const maxTemp = [
-      63.0, 57.2, 56.1, 65.4, 54.9, 61.2, 58.8, 59.6, 58.6, 58.2,
-    ];
+    const dateFormatted = previsions.map((el: { dt: number }) => {
+      const formattedDate = new Date(el.dt * 1000);
+      return `${formattedDate.getDate()}/${formattedDate.getMonth() + 1}`;
+    });
+    const minTemp = previsions.map((el: { temp: { min: number } }) => {
+      return Math.floor(el.temp.min);
+    });
+
+    const maxTemp = previsions.map((el: { temp: { max: number } }) => {
+      return Math.floor(el.temp.max);
+    });
 
     const data = {
-      labels: hours,
+      labels: dateFormatted,
       datasets: [
         {
           backgroundColor: "rgba(36,50,250,1)",

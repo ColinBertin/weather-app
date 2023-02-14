@@ -101,7 +101,7 @@ export default function Home() {
                     city={city}
                     country={country}
                   />
-                  <LineChart hourly={hourlyPrevisions} />
+                  <LineChart previsions={previsions} />
                   <div className="flex flex-wrap gap-5 justify-center">
                     {previsions.map((prevision, i) => {
                       return <PrevisionCards key={i} data={prevision} />;
