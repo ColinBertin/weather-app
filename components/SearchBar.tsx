@@ -16,6 +16,7 @@ export default function SearchBar({
       <input
         type="text"
         id="first_name"
+        placeholder="London"
         onChange={(e) => handleChange(e)}
         className="border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5 w-3/4"
       />

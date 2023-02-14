@@ -84,6 +84,7 @@ export default function Home() {
       </Head>
       <main className="flex flex-col h-screen p-4">
         <div className="m-auto">
+          <h1 className="text-center text-4xl mb-8">My Weather Forecast</h1>
           <SearchBar
             handleChange={handleChange}
             getCoords={getCoords}
