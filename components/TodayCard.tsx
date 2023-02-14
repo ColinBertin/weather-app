@@ -57,11 +57,11 @@ export default function TodayCard({
             {handleIcon(today.weather[0].main)}
           </p>
         </div>
-        <p className="mt-4 sm:ml-4 md:ml-0 text-sm ">
+        <p className="mt-4 ml-6 md:ml-0 text-sm ">
           Feels like {Math.round(today.feels_like)}°
         </p>
       </div>
-      <div className="text-xl sm:ml-4 md:ml-0">
+      <div className="text-xl ml-6 md:ml-0">
         <p className="">Min: {Math.round(previsionToday.temp.min)}°</p>
         <p className="">Max: {Math.round(previsionToday.temp.max)}°</p>
         <p className="">Humidity: {Math.round(today.humidity)}%</p>
