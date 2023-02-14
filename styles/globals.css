@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  background-image: url("../public/sky.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
   .lds-ellipsis {
     display: inline-block;
     position: relative;
@@ -14,7 +20,7 @@
     width: 13px;
     height: 13px;
     border-radius: 50%;
-    background: rgb(29 78 216);
+    background: rgb(255, 255, 255);
     animation-timing-function: cubic-bezier(0, 1, 1, 0);
   }
   .lds-ellipsis div:nth-child(1) {

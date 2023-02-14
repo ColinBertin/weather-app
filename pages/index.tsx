@@ -52,7 +52,7 @@ export default function Home() {
     setIsLoading(true);
     e.preventDefault();
     try {
-      const url = `http://api.openweathermap.org/geo/1.0/direct?q=${request}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
+      const url = `https://api.openweathermap.org/geo/1.0/direct?q=${request}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
       const response = await fetch(url);
       const data = await response.json();
       getWeatherData(data);
@@ -82,7 +82,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex flex-col h-screen p-4">
+      <main className="flex flex-col h-screen p-6">
         <div className="m-auto">
           <h1 className="text-center text-4xl mb-8">My Weather Forecast</h1>
           <SearchBar
@@ -103,7 +103,7 @@ export default function Home() {
                     country={country}
                   />
                   <LineChart previsions={previsions} />
-                  <div className="flex flex-wrap gap-5 justify-center">
+                  <div className="flex flex-wrap gap-5 justify-center mb-8">
                     {previsions.map((prevision, i) => {
                       return <PrevisionCards key={i} data={prevision} />;
                     })}

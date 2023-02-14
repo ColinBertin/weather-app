@@ -60,7 +60,7 @@ export default function LineChart({ previsions }: ChartsProps) {
   }, []);
 
   return (
-    <div className="flex justify-center mt-5 py-8 px-4 border border-gray-300 rounded-lg">
+    <div className="flex justify-center mt-5 py-8 px-4 border border-gray-300 rounded-lg bg-white">
       <canvas id="myChart" ref={canvasEl} height="100" />
     </div>
   );
