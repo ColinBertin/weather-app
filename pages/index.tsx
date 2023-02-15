@@ -34,7 +34,7 @@ export default function Home() {
 
       const response = await fetch(url);
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setToday(data.current);
       setTodayPrevision(data.daily[0]);
       setPrevisions(data.daily.splice(1, 7));
