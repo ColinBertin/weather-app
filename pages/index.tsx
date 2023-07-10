@@ -55,6 +55,7 @@ export default function Home() {
       const url = `https://api.openweathermap.org/geo/1.0/direct?q=${request}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
       const response = await fetch(url);
       const data = await response.json();
+      console.log(data);
       getWeatherData(data);
       setCity(data[0].name);
       setCountry(data[0].country);
