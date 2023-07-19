@@ -18,10 +18,13 @@ type Today = {
   weather: [{ main: string }];
 };
 
+type Coords = { lat: number; lon: number };
+
 export default function Home() {
   const [request, setRequest] = useState("");
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
+  const [coords, setCoords] = useState<Coords>();
   const [today, setToday] = useState<Today>();
   const [todayPrevision, setTodayPrevision] = useState([]);
   const [previsions, setPrevisions] = useState([]);
@@ -31,10 +34,9 @@ export default function Home() {
   const getWeatherData = async (lonLat: WeatherData[]) => {
     try {
       const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lonLat[0].lat}&lon=${lonLat[0].lon}&units=metric&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
-
       const response = await fetch(url);
       const data = await response.json();
-      // console.log(data);
+
       setToday(data.current);
       setTodayPrevision(data.daily[0]);
       setPrevisions(data.daily.splice(1, 7));
@@ -47,15 +49,18 @@ export default function Home() {
   };
 
   const getCoords = async (
-    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+    e?: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
   ) => {
     setIsLoading(true);
-    e.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
     try {
       const url = `https://api.openweathermap.org/geo/1.0/direct?q=${request}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
       const response = await fetch(url);
       const data = await response.json();
-      console.log(data);
+
+      setIsLoading(false);
       getWeatherData(data);
       setCity(data[0].name);
       setCountry(data[0].country);
@@ -69,11 +74,33 @@ export default function Home() {
     setRequest(e.target.value);
   };
 
+  const getLocationName = async (coords: Coords) => {
+    const url =
+      await `http://api.openweathermap.org/geo/1.0/reverse?lat=${coords.lat}&lon=${coords.lon}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    console.log(coords);
+  };
+
   useEffect(() => {
-    // console.log(hourlyPrevisions);
-    // console.log(today);
-    // console.log(todayPrevision);
-  }, [city, country, today, hourlyPrevisions]);
+    setIsLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        // setCoords({
+        //   lat: position.coords.latitude,
+        //   lon: position.coords.longitude,
+        // });
+        console.log(position);
+        setIsLoading(false);
+      },
+      () => {
+        setRequest("London");
+        getCoords();
+        setIsLoading(false);
+      }
+    );
+    // getLocationName(coords as Coords);
+  }, [request, coords]);
 
   return (
     <>
