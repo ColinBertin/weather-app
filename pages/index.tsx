@@ -4,7 +4,14 @@ import PrevisionCards from "@/components/PrevisionCards";
 import SearchBar from "@/components/SearchBar";
 import TodayCard from "@/components/TodayCard";
 import Head from "next/head";
-import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 type WeatherData = {
   lat: number;
@@ -74,33 +81,41 @@ export default function Home() {
     setRequest(e.target.value);
   };
 
-  const getLocationName = async (coords: Coords) => {
-    const url =
-      await `http://api.openweathermap.org/geo/1.0/reverse?lat=${coords.lat}&lon=${coords.lon}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
-    const response = await fetch(url);
-    const data = await response.json();
-    setRequest(data[0].name);
-  };
+  const getLocationName = useCallback(
+    async (coords: Coords) => {
+      const url =
+        await `http://api.openweathermap.org/geo/1.0/reverse?lat=${coords.lat}&lon=${coords.lon}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      setRequest(data[0].name);
+    },
+    [request, coords]
+  );
 
   useEffect(() => {
+    console.log(request);
     setIsLoading(true);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        getLocationName({
-          lat: position.coords.latitude,
-          lon: position.coords.longitude,
-        });
-        setIsLoading(false);
-      },
-      () => {
-        setRequest("London");
-        setIsLoading(false);
-      }
-    );
-    if (!!request) {
-      getCoords();
+    if (request === "") {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log(position);
+          // getLocationName({
+          //   lat: position.coords.latitude,
+          //   lon: position.coords.longitude,
+          // });
+          setIsLoading(false);
+        },
+        () => {
+          setRequest("London");
+          getCoords();
+          setIsLoading(false);
+        }
+      );
+      // if (request !== "") {
+      //   getCoords();
+      // }
     }
-  }, [request, coords]);
+  }, [request]);
 
   return (
     <>

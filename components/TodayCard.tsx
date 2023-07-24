@@ -65,7 +65,7 @@ export default function TodayCard({
         <p className="">Min: {Math.round(previsionToday.temp.min)}°</p>
         <p className="">Max: {Math.round(previsionToday.temp.max)}°</p>
         <p className="">Humidity: {Math.round(today.humidity)}%</p>
-        <h2 className="text-red-500">{`${city}, ${country}`}</h2>
+        <h2 className="text-blue-500 text-4xl font-bold">{`${city}, ${country}`}</h2>
       </div>
     </div>
   );
