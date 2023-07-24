@@ -28,7 +28,7 @@ export default function Home() {
   const [today, setToday] = useState<Today>();
   const [todayPrevision, setTodayPrevision] = useState([]);
   const [previsions, setPrevisions] = useState([]);
-  const [hourlyPrevisions, setHourlyPrevisions] = useState([]);
+  // const [hourlyPrevisions, setHourlyPrevisions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const getWeatherData = async (lonLat: WeatherData[]) => {
@@ -40,7 +40,7 @@ export default function Home() {
       setToday(data.current);
       setTodayPrevision(data.daily[0]);
       setPrevisions(data.daily.splice(1, 7));
-      setHourlyPrevisions(data.hourly);
+      // setHourlyPrevisions(data.hourly);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
