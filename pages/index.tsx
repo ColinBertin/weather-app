@@ -79,27 +79,27 @@ export default function Home() {
       await `http://api.openweathermap.org/geo/1.0/reverse?lat=${coords.lat}&lon=${coords.lon}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
     const response = await fetch(url);
     const data = await response.json();
-    console.log(coords);
+    setRequest(data[0].name);
   };
 
   useEffect(() => {
     setIsLoading(true);
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        // setCoords({
-        //   lat: position.coords.latitude,
-        //   lon: position.coords.longitude,
-        // });
-        console.log(position);
+        getLocationName({
+          lat: position.coords.latitude,
+          lon: position.coords.longitude,
+        });
         setIsLoading(false);
       },
       () => {
         setRequest("London");
-        getCoords();
         setIsLoading(false);
       }
     );
-    // getLocationName(coords as Coords);
+    if (!!request) {
+      getCoords();
+    }
   }, [request, coords]);
 
   return (
