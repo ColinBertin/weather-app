@@ -93,19 +93,20 @@ export default function Home() {
 
   useEffect(() => {
     if (request === "") {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          getLocationName({
-            lat: position.coords.latitude,
-            lon: position.coords.longitude,
-          });
-        },
-        () => {
-          setRequest("London");
-          getCoords();
-          setIsLoading(false);
-        }
-      );
+      // navigator.geolocation.getCurrentPosition(
+      //   (position) => {
+      //     // getLocationName({
+      //     //   lat: position.coords.latitude,
+      //     //   lon: position.coords.longitude,
+      //     // });
+      //     console.log("need HTTPS to manage it");
+      //   },
+      // );
+      () => {
+        setRequest("London");
+        getCoords();
+        setIsLoading(false);
+      };
     }
   }, [request]);
 
