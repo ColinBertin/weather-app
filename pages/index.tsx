@@ -56,6 +56,7 @@ export default function Home() {
   };
 
   const getCoords = async (
+    name?: string,
     e?: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
   ) => {
     setIsLoading(true);
@@ -63,7 +64,9 @@ export default function Home() {
       e.preventDefault();
     }
     try {
-      const url = `https://api.openweathermap.org/geo/1.0/direct?q=${request}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
+      const url = `https://api.openweathermap.org/geo/1.0/direct?q=${
+        name || request
+      }&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
       const response = await fetch(url);
       const data = await response.json();
 
@@ -83,27 +86,25 @@ export default function Home() {
 
   const getLocationName = useCallback(
     async (coords: Coords) => {
+      setIsLoading(true);
       const url =
         await `http://api.openweathermap.org/geo/1.0/reverse?lat=${coords.lat}&lon=${coords.lon}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
       const response = await fetch(url);
       const data = await response.json();
-      setRequest(data[0].name);
+      getCoords(data[0].name);
+      setIsLoading(false);
     },
     [request, coords]
   );
 
   useEffect(() => {
-    console.log(request);
-    setIsLoading(true);
     if (request === "") {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          console.log(position);
-          // getLocationName({
-          //   lat: position.coords.latitude,
-          //   lon: position.coords.longitude,
-          // });
-          setIsLoading(false);
+          getLocationName({
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
+          });
         },
         () => {
           setRequest("London");
@@ -111,9 +112,6 @@ export default function Home() {
           setIsLoading(false);
         }
       );
-      // if (request !== "") {
-      //   getCoords();
-      // }
     }
   }, [request]);
 
@@ -126,36 +124,34 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex flex-col h-screen p-6">
-        <div className="m-auto">
-          <h1 className="text-center text-4xl mb-8">My Weather Forecast</h1>
-          <SearchBar
-            handleChange={handleChange}
-            getCoords={getCoords}
-            isLoading={isLoading}
-          />
-          {city && country && today && previsions && (
-            <>
-              {isLoading ? (
-                <LoadingSpinner />
-              ) : (
-                <>
-                  <TodayCard
-                    today={today}
-                    previsionToday={todayPrevision}
-                    city={city}
-                    country={country}
-                  />
-                  <LineChart previsions={previsions} />
-                  <div className="flex flex-wrap gap-5 justify-center mb-8">
-                    {previsions.map((prevision, i) => {
-                      return <PrevisionCards key={i} data={prevision} />;
-                    })}
-                  </div>
-                </>
-              )}
-            </>
-          )}
-        </div>
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <div className="m-auto">
+            <h1 className="text-center text-4xl mb-8">My Weather Forecast</h1>
+            <SearchBar
+              handleChange={handleChange}
+              getCoords={getCoords}
+              isLoading={isLoading}
+            />
+            {city && country && today && previsions && (
+              <>
+                <TodayCard
+                  today={today}
+                  previsionToday={todayPrevision}
+                  city={city}
+                  country={country}
+                />
+                <LineChart previsions={previsions} />
+                <div className="flex flex-wrap gap-5 justify-center mb-8">
+                  {previsions.map((prevision, i) => {
+                    return <PrevisionCards key={i} data={prevision} />;
+                  })}
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </main>
     </>
   );
