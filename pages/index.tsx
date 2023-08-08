@@ -55,17 +55,11 @@ export default function Home() {
     }
   };
 
-  const getCoords = async (
-    name?: string,
-    e?: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
-  ) => {
+  const getCoords = async (name?: string) => {
     setIsLoading(true);
-    if (e) {
-      e.preventDefault();
-    }
     try {
       const url = `https://api.openweathermap.org/geo/1.0/direct?q=${
-        name || request
+        request || name
       }&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
       const response = await fetch(url);
       const data = await response.json();
