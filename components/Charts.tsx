@@ -57,7 +57,7 @@ export default function LineChart({ previsions }: ChartsProps) {
     return function cleanup() {
       myLineChart.destroy();
     };
-  }, []);
+  }, [previsions]);
 
   return (
     <div className="flex justify-center mt-5 py-8 px-4 border border-gray-300 rounded-lg bg-white">
