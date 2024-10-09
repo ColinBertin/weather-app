@@ -22,36 +22,30 @@ type Today = {
   feels_like: number;
   weather: [{ main: string }];
 };
-
+0
 type Coords = { lat: number; lon: number };
 
 export default function Home() {
-  // const [forecast, setForecast] = useState({})
+  const [forecast, setForecast] = useState<any>()
   const [location, setLocation] = useState<Location>()
   const [request, setRequest] = useState("");
-  const [today, setToday] = useState<Today>();
-  const [todayPrevision, setTodayPrevision] = useState([]);
-  const [previsions, setPrevisions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const getWeatherData = async (coords: Coords) => {
     try {
-      const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${coords.lat}&lon=${coords.lon}&units=metric&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
+      const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${coords.lat}&lon=${coords.lon}&exclude=minutely,hourly&units=metric&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
       const response = await fetch(url);
       const data = await response.json();
 
-      // setForecast({
-      //   hourly: data.hourly,
-      // });
-      setToday(data.current);
-      setTodayPrevision(data.daily[0]);
-      setPrevisions(data.daily.splice(1, 7));
-      // setHourlyPrevisions(data.hourly);
-      setIsLoading(false);
+      setForecast({
+        today: data.current,
+        todayPrevision: data.daily[0],
+        previsions: data.daily.splice(1, 7),
+      });
     } catch (error) {
       console.log(error);
-      setIsLoading(false);
     }
+    setIsLoading(false);
   };
 
   const getCoords = useCallback(async (name?: string) => {
@@ -131,17 +125,16 @@ export default function Home() {
               getCoords={getCoords}
               isLoading={isLoading}
             />
-            {location && today && previsions && (
+            {forecast && location && (
               <>
                 <TodayCard
-                  today={today}
-                  previsionToday={todayPrevision}
+                  forecast={{today: forecast.today, todayPrevision: forecast.todayPrevision}}
                   location={location}
                 />
-                <LineChart previsions={previsions} />
+                <LineChart previsions={forecast.previsions} />
                 <div className="flex flex-wrap gap-5 justify-center mb-8">
-                  {previsions.map((prevision, i) => {
-                    return <PrevisionCards key={i} data={prevision} />;
+                  {forecast.previsions.map((prevision: any) => {
+                    return <PrevisionCards key={prevision.dt} data={prevision} />;
                   })}
                 </div>
               </>

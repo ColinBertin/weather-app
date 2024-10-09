@@ -11,22 +11,22 @@ import {
 type TodayCardProps = {
   location: {
     city: string;
-    country: string
+    country: string;
   };
-  today: {
-    temp: number;
-    humidity: number;
-    weather: [{ main: string }];
-    feels_like: number;
+  forecast: {
+    today: {
+      temp: number;
+      humidity: number;
+      weather: [{ main: string }];
+      feels_like: number;
+    };
+    todayPrevision: any;
   };
-  previsionToday: any;
 };
 
-export default function TodayCard({
-  location,
-  today,
-  previsionToday,
-}: TodayCardProps) {
+export default function TodayCard({ location, forecast }: TodayCardProps) {
+  const { today, todayPrevision } = forecast;
+
   const handleIcon = (condition: string) => {
     switch (condition) {
       case "Thunderstorm":
@@ -60,8 +60,8 @@ export default function TodayCard({
         </p>
       </div>
       <div className="text-xl ml-6 md:ml-0">
-        <p className="">Min: {Math.round(previsionToday.temp.min)}°</p>
-        <p className="">Max: {Math.round(previsionToday.temp.max)}°</p>
+        <p className="">Min: {Math.round(todayPrevision.temp.min)}°</p>
+        <p className="">Max: {Math.round(todayPrevision.temp.max)}°</p>
         <p className="">Humidity: {Math.round(today.humidity)}%</p>
         <h2 className="text-blue-500 text-4xl font-bold">{`${location.city}, ${location.country}`}</h2>
       </div>

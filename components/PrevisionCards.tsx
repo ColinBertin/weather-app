@@ -2,13 +2,10 @@ import { useState, useMemo } from "react";
 import {
   TiWeatherCloudy,
   TiWeatherDownpour,
-  TiWeatherNight,
-  TiWeatherPartlySunny,
   TiWeatherShower,
   TiWeatherSnow,
   TiWeatherStormy,
   TiWeatherSunny,
-  TiWeatherWindyCloudy,
   TiWeatherWindy,
 } from "react-icons/ti";
 import { WiHumidity } from "react-icons/wi";
@@ -42,7 +39,7 @@ export default function PrevisionCards({ data }: PrevisionCardsProps) {
     const formattedDate = new Date(data.dt * 1000);
     setDate(formattedDate.getDate());
     setMonth(formattedDate.getMonth() + 1);
-  }, [setDate, setMonth]);
+  }, [data.dt]);
 
   return (
     <div className="flex flex-col justify-around items-center mt-4 w-24 h-36 border border-gray-300 rounded-lg bg-white">
