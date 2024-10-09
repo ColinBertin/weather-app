@@ -1,19 +1,18 @@
 import {
   TiWeatherCloudy,
   TiWeatherDownpour,
-  TiWeatherNight,
-  TiWeatherPartlySunny,
   TiWeatherShower,
   TiWeatherSnow,
   TiWeatherStormy,
   TiWeatherSunny,
-  TiWeatherWindyCloudy,
   TiWeatherWindy,
 } from "react-icons/ti";
 
 type TodayCardProps = {
-  city: string;
-  country: string;
+  location: {
+    city: string;
+    country: string
+  };
   today: {
     temp: number;
     humidity: number;
@@ -24,8 +23,7 @@ type TodayCardProps = {
 };
 
 export default function TodayCard({
-  city,
-  country,
+  location,
   today,
   previsionToday,
 }: TodayCardProps) {
@@ -65,7 +63,7 @@ export default function TodayCard({
         <p className="">Min: {Math.round(previsionToday.temp.min)}°</p>
         <p className="">Max: {Math.round(previsionToday.temp.max)}°</p>
         <p className="">Humidity: {Math.round(today.humidity)}%</p>
-        <h2 className="text-blue-500 text-4xl font-bold">{`${city}, ${country}`}</h2>
+        <h2 className="text-blue-500 text-4xl font-bold">{`${location.city}, ${location.country}`}</h2>
       </div>
     </div>
   );

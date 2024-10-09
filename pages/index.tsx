@@ -6,17 +6,15 @@ import TodayCard from "@/components/TodayCard";
 import Head from "next/head";
 import {
   ChangeEvent,
-  MouseEvent,
   useCallback,
   useEffect,
-  useMemo,
   useState,
 } from "react";
 
-type WeatherData = {
-  lat: number;
-  lon: number;
-};
+type Location = {
+  country: string;
+  city: string;
+}
 
 type Today = {
   temp: number;
@@ -28,22 +26,23 @@ type Today = {
 type Coords = { lat: number; lon: number };
 
 export default function Home() {
+  // const [forecast, setForecast] = useState({})
+  const [location, setLocation] = useState<Location>()
   const [request, setRequest] = useState("");
-  const [city, setCity] = useState("");
-  const [country, setCountry] = useState("");
-  const [coords, setCoords] = useState<Coords>();
   const [today, setToday] = useState<Today>();
   const [todayPrevision, setTodayPrevision] = useState([]);
   const [previsions, setPrevisions] = useState([]);
-  // const [hourlyPrevisions, setHourlyPrevisions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const getWeatherData = async (lonLat: WeatherData[]) => {
+  const getWeatherData = async (coords: Coords) => {
     try {
-      const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lonLat[0].lat}&lon=${lonLat[0].lon}&units=metric&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
+      const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${coords.lat}&lon=${coords.lon}&units=metric&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
       const response = await fetch(url);
       const data = await response.json();
 
+      // setForecast({
+      //   hourly: data.hourly,
+      // });
       setToday(data.current);
       setTodayPrevision(data.daily[0]);
       setPrevisions(data.daily.splice(1, 7));
@@ -55,7 +54,7 @@ export default function Home() {
     }
   };
 
-  const getCoords = async (name?: string) => {
+  const getCoords = useCallback(async (name?: string) => {
     setIsLoading(true);
     try {
       const url = `https://api.openweathermap.org/geo/1.0/direct?q=${
@@ -64,15 +63,19 @@ export default function Home() {
       const response = await fetch(url);
       const data = await response.json();
 
+      const coords = {lat: data[0].lat, lon: data[0].lon};
+
       setIsLoading(false);
-      getWeatherData(data);
-      setCity(data[0].name);
-      setCountry(data[0].country);
+      getWeatherData(coords);
+      setLocation({
+        country: data[0].country,
+        city: data[0].name
+      });
     } catch (error) {
       console.log(error);
       setIsLoading(false);
     }
-  };
+  }, [request]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setRequest(e.target.value);
@@ -107,7 +110,7 @@ export default function Home() {
       getCoords("London");
       setIsLoading(false);
     }
-  }, [request]);
+  }, [getCoords, request]);
 
   return (
     <>
@@ -128,13 +131,12 @@ export default function Home() {
               getCoords={getCoords}
               isLoading={isLoading}
             />
-            {city && country && today && previsions && (
+            {location && today && previsions && (
               <>
                 <TodayCard
                   today={today}
                   previsionToday={todayPrevision}
-                  city={city}
-                  country={country}
+                  location={location}
                 />
                 <LineChart previsions={previsions} />
                 <div className="flex flex-wrap gap-5 justify-center mb-8">
