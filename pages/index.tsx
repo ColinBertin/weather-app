@@ -3,25 +3,13 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import PrevisionCards from "@/components/PrevisionCards";
 import SearchBar from "@/components/SearchBar";
 import TodayCard from "@/components/TodayCard";
+import { Coords, Forecast, Location, Prevision } from "@/types";
 import Head from "next/head";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 
-type Location = {
-  country: string;
-  city: string;
-};
-
-type Today = {
-  temp: number;
-  humidity: number;
-  feels_like: number;
-  weather: [{ main: string }];
-};
-
-type Coords = { lat: number; lon: number };
-
 export default function Home() {
-  const [forecast, setForecast] = useState<any>();
+  const [forecast, setForecast] = useState<Forecast>();
+  const [previsions, setPrevisions] = useState<Prevision[]>()
   const [location, setLocation] = useState<Location>();
   const [request, setRequest] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -38,8 +26,8 @@ export default function Home() {
       setForecast({
         today,
         todayPrevision,
-        previsions,
       });
+      setPrevisions(previsions)
     } catch (error) {
       console.error(error);
     }
@@ -125,7 +113,7 @@ export default function Home() {
               getCoords={getCoords}
               isLoading={isLoading}
             />
-            {forecast && location && (
+            {forecast && location && previsions && (
               <>
                 <TodayCard
                   forecast={{
@@ -134,9 +122,9 @@ export default function Home() {
                   }}
                   location={location}
                 />
-                <LineChart previsions={forecast.previsions} />
+                <LineChart previsions={previsions} />
                 <div className="flex flex-wrap gap-5 justify-center mb-8">
-                  {forecast.previsions.map((prevision: any) => {
+                  {previsions.map((prevision: Prevision) => {
                     return (
                       <PrevisionCards key={prevision.dt} data={prevision} />
                     );

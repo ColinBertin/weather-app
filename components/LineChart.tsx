@@ -1,3 +1,4 @@
+import { Prevision } from "@/types";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,7 +9,6 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 
 ChartJS.register(
@@ -21,24 +21,19 @@ ChartJS.register(
   Legend
 );
 
-type ChartsProps = any;
+type ChartsProps = {hourly: Prevision[]};
 
 export default function LineChart({ hourly }: ChartsProps) {
-  const hours = hourly.splice(0, 10).map((hour: any) => {
+  const hours = hourly.splice(0, 10).map((hour) => {
     const h = new Date(hour.dt * 1000);
     return `${h.getHours()}:00`;
   });
 
-  useEffect(() => {
-    console.log(hourly);
-  }, [hourly]);
-
-  // ----------------------------------------to change type
   const data1: any = {
     labels: hours,
     datasets: [
       {
-        label: "My First dataset",
+        label: "Forecast dataset",
         fill: false,
         lineTension: 0.1,
         backgroundColor: "rgba(75,192,192,0.4)",

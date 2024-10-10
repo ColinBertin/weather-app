@@ -1,3 +1,4 @@
+import { Forecast, Location } from "@/types";
 import {
   TiWeatherCloudy,
   TiWeatherDownpour,
@@ -9,19 +10,8 @@ import {
 } from "react-icons/ti";
 
 type TodayCardProps = {
-  location: {
-    city: string;
-    country: string;
-  };
-  forecast: {
-    today: {
-      temp: number;
-      humidity: number;
-      weather: [{ main: string }];
-      feels_like: number;
-    };
-    todayPrevision: any;
-  };
+  location: Location;
+  forecast: Forecast;
 };
 
 export default function TodayCard({ location, forecast }: TodayCardProps) {

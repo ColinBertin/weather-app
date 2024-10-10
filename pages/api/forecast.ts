@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { Forecast } from "@/types";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-type Forecast = any;
 type Error = { message: string };
 
 export default async function handler(

@@ -2,7 +2,7 @@ import { ChangeEvent } from "react";
 
 type SearchBarProps = {
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  getCoords: (e: any) => void; // As to be change ------------------------------------------------ <<<<<<<<
+  getCoords: (e: any) => void; 
   isLoading: boolean;
 };
 

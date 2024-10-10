@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { Chart, ChartTypeRegistry } from "chart.js/auto";
+import { Prevision } from "@/types";
 
-type ChartsProps = any;
+type ChartsProps = {previsions: Prevision[]};
 
 export default function LineChart({ previsions }: ChartsProps) {
   const canvasEl = useRef<any>({});

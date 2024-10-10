@@ -1,3 +1,4 @@
+import { Prevision } from "@/types";
 import { useState, useMemo } from "react";
 import {
   TiWeatherCloudy,
@@ -10,7 +11,9 @@ import {
 } from "react-icons/ti";
 import { WiHumidity } from "react-icons/wi";
 
-type PrevisionCardsProps = any;
+type PrevisionCardsProps = {
+  data: Prevision;
+};
 
 export default function PrevisionCards({ data }: PrevisionCardsProps) {
   const [date, setDate] = useState(0);
