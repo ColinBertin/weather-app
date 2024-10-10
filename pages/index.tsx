@@ -4,17 +4,12 @@ import PrevisionCards from "@/components/PrevisionCards";
 import SearchBar from "@/components/SearchBar";
 import TodayCard from "@/components/TodayCard";
 import Head from "next/head";
-import {
-  ChangeEvent,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 
 type Location = {
   country: string;
   city: string;
-}
+};
 
 type Today = {
   temp: number;
@@ -22,54 +17,59 @@ type Today = {
   feels_like: number;
   weather: [{ main: string }];
 };
-0
+
 type Coords = { lat: number; lon: number };
 
 export default function Home() {
-  const [forecast, setForecast] = useState<any>()
-  const [location, setLocation] = useState<Location>()
+  const [forecast, setForecast] = useState<any>();
+  const [location, setLocation] = useState<Location>();
   const [request, setRequest] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const getWeatherData = async (coords: Coords) => {
     try {
-      const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${coords.lat}&lon=${coords.lon}&exclude=minutely,hourly&units=metric&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
-      const response = await fetch(url);
+      const response = await fetch(
+        `/api/forecast?lon=${coords.lon}&lat=${coords.lat}`
+      );
       const data = await response.json();
 
+      const { today, todayPrevision, previsions } = data;
+
       setForecast({
-        today: data.current,
-        todayPrevision: data.daily[0],
-        previsions: data.daily.splice(1, 7),
+        today,
+        todayPrevision,
+        previsions,
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
     setIsLoading(false);
   };
 
-  const getCoords = useCallback(async (name?: string) => {
-    setIsLoading(true);
-    try {
-      const url = `https://api.openweathermap.org/geo/1.0/direct?q=${
-        request || name
-      }&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
-      const response = await fetch(url);
-      const data = await response.json();
+  const getCoords = useCallback(
+    async (name: string) => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(
+          `/api/coordinates?name=${request || name}`
+        );
+        const data = await response.json();
+        const coords = { lat: data.lat, lon: data.lon };
+        const location = {
+          country: data.country,
+          city: data.city,
+        };
 
-      const coords = {lat: data[0].lat, lon: data[0].lon};
-
-      setIsLoading(false);
-      getWeatherData(coords);
-      setLocation({
-        country: data[0].country,
-        city: data[0].name
-      });
-    } catch (error) {
-      console.log(error);
-      setIsLoading(false);
-    }
-  }, [request]);
+        setIsLoading(false);
+        getWeatherData(coords);
+        setLocation(location);
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false);
+      }
+    },
+    [request]
+  );
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setRequest(e.target.value);
@@ -128,13 +128,18 @@ export default function Home() {
             {forecast && location && (
               <>
                 <TodayCard
-                  forecast={{today: forecast.today, todayPrevision: forecast.todayPrevision}}
+                  forecast={{
+                    today: forecast.today,
+                    todayPrevision: forecast.todayPrevision,
+                  }}
                   location={location}
                 />
                 <LineChart previsions={forecast.previsions} />
                 <div className="flex flex-wrap gap-5 justify-center mb-8">
                   {forecast.previsions.map((prevision: any) => {
-                    return <PrevisionCards key={prevision.dt} data={prevision} />;
+                    return (
+                      <PrevisionCards key={prevision.dt} data={prevision} />
+                    );
                   })}
                 </div>
               </>
