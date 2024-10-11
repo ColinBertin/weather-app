@@ -102,7 +102,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex flex-col h-screen p-6">
+      <main className="flex flex-col h-screen w-full p-6">
         {isLoading ? (
           <LoadingSpinner />
         ) : (
@@ -113,7 +113,7 @@ export default function Home() {
               isLoading={isLoading}
             />
             {forecast && location && previsions && (
-              <>
+              <div className="flex flex-col md:flex-row">
                 <TodayCard
                   forecast={{
                     today: forecast.today,
@@ -121,6 +121,7 @@ export default function Home() {
                   }}
                   location={location}
                 />
+                <div>
                 <LineChart previsions={previsions} />
                 <div className="flex flex-wrap gap-5 justify-center mb-8">
                   {previsions.map((prevision: Prevision) => {
@@ -129,7 +130,8 @@ export default function Home() {
                     );
                   })}
                 </div>
-              </>
+                </div>
+              </div>
             )}
           </div>
         )}

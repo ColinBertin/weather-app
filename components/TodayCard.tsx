@@ -37,7 +37,7 @@ export default function TodayCard({ location, forecast }: TodayCardProps) {
   };
 
   return (
-    <div className="flex flex-col md:flex-row justify-around mt-5 py-8 border border-gray-300 rounded-lg bg-white">
+    <div className="flex flex-col justify-around mt-5 md:m-5 p-8 border border-gray-300 rounded-lg bg-white">
       <div className="pb-6 gap-6">
         <div className="flex justify-center">
           <h1 className="text-9xl">{Math.round(today.temp)}°</h1>
