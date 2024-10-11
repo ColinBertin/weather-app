@@ -30,6 +30,7 @@ export default function Home() {
       setPrevisions(previsions)
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
     }
     setIsLoading(false);
   };
@@ -48,7 +49,6 @@ export default function Home() {
           city: data.city,
         };
 
-        setIsLoading(false);
         getWeatherData(coords);
         setLocation(location);
       } catch (error) {
@@ -107,7 +107,6 @@ export default function Home() {
           <LoadingSpinner />
         ) : (
           <div className="m-auto">
-            <h1 className="text-center text-4xl mb-8">My Weather Forecast</h1>
             <SearchBar
               handleChange={handleChange}
               getCoords={getCoords}
