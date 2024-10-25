@@ -30,7 +30,6 @@ export default function Home() {
       setPrevisions(previsions);
     } catch (error) {
       console.error(error);
-      setIsLoading(false);
     }
     setIsLoading(false);
   };
@@ -61,14 +60,18 @@ export default function Home() {
 
   const getLocationName = useCallback(
     async (coords: Coords) => {
-      setIsLoading(true);
-      const response = await fetch(
-        `/api/city?lat=${coords.lat}&lon=${coords.lon}`
-      );
-      const data = await response.json();
+      try {
+        setIsLoading(true);
+        const response = await fetch(
+          `/api/city?lat=${coords.lat}&lon=${coords.lon}`
+        );
+        const data = await response.json();
 
-      getCoords(data);
-      setIsLoading(false);
+        getCoords(data);
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false);
+      }
     },
     [getCoords]
   );
@@ -95,8 +98,6 @@ export default function Home() {
           getCoords("London");
         }
       );
-
-      setIsLoading(false);
     }
   }, [getCoords, getLocationName, request]);
 
