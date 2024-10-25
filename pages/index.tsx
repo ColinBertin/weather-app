@@ -9,7 +9,7 @@ import { ChangeEvent, useCallback, useEffect, useState } from "react";
 
 export default function Home() {
   const [forecast, setForecast] = useState<Forecast>();
-  const [previsions, setPrevisions] = useState<Prevision[]>()
+  const [previsions, setPrevisions] = useState<Prevision[]>();
   const [location, setLocation] = useState<Location>();
   const [request, setRequest] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -27,7 +27,7 @@ export default function Home() {
         today,
         todayPrevision,
       });
-      setPrevisions(previsions)
+      setPrevisions(previsions);
     } catch (error) {
       console.error(error);
       setIsLoading(false);
@@ -59,28 +59,28 @@ export default function Home() {
     [request]
   );
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setRequest(e.target.value);
-  };
-
   const getLocationName = useCallback(
     async (coords: Coords) => {
       setIsLoading(true);
-      const url =
-        await `http://api.openweathermap.org/geo/1.0/reverse?lat=${coords.lat}&lon=${coords.lon}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
-      const response = await fetch(url);
+      const response = await fetch(
+        `/api/city?lat=${coords.lat}&lon=${coords.lon}`
+      );
       const data = await response.json();
-      console.log(data[0].name)
-      getCoords(data[0].name);
+
+      getCoords(data);
       setIsLoading(false);
     },
     [getCoords]
   );
 
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setRequest(e.target.value);
+  };
+
   useEffect(() => {
     if (request === "") {
       setIsLoading(true);
-      
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const coords = {
@@ -88,15 +88,14 @@ export default function Home() {
             lon: position.coords.longitude,
           };
           getLocationName(coords);
-          setRequest("UserLocation");
         },
         (error) => {
           console.error(error);
           setRequest("London");
           getCoords("London");
-        },
+        }
       );
-  
+
       setIsLoading(false);
     }
   }, [getCoords, getLocationName, request]);
@@ -129,14 +128,14 @@ export default function Home() {
                   location={location}
                 />
                 <div>
-                <LineChart previsions={previsions} />
-                <div className="flex flex-wrap gap-5 justify-center mb-8">
-                  {previsions.map((prevision: Prevision) => {
-                    return (
-                      <PrevisionCards key={prevision.dt} data={prevision} />
-                    );
-                  })}
-                </div>
+                  <LineChart previsions={previsions} />
+                  <div className="flex flex-wrap gap-5 justify-center mb-8">
+                    {previsions.map((prevision: Prevision) => {
+                      return (
+                        <PrevisionCards key={prevision.dt} data={prevision} />
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             )}
