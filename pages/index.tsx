@@ -63,36 +63,43 @@ export default function Home() {
     setRequest(e.target.value);
   };
 
-  // const getLocationName = useCallback(
-  //   async (coords: Coords) => {
-  //     setIsLoading(true);
-  //     const url =
-  //       await `http://api.openweathermap.org/geo/1.0/reverse?lat=${coords.lat}&lon=${coords.lon}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
-  //     const response = await fetch(url);
-  //     const data = await response.json();
-  //     getCoords(data[0].name);
-  //     setIsLoading(false);
-  //   },
-  //   [request, coords]
-  // );
+  const getLocationName = useCallback(
+    async (coords: Coords) => {
+      setIsLoading(true);
+      const url =
+        await `http://api.openweathermap.org/geo/1.0/reverse?lat=${coords.lat}&lon=${coords.lon}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      console.log(data[0].name)
+      getCoords(data[0].name);
+      setIsLoading(false);
+    },
+    [getCoords]
+  );
 
   useEffect(() => {
     if (request === "") {
       setIsLoading(true);
-      // navigator.geolocation.getCurrentPosition(
-      //   (position) => {
-      //     // getLocationName({
-      //     //   lat: position.coords.latitude,
-      //     //   lon: position.coords.longitude,
-      //     // });
-      //     console.log("need HTTPS to manage it");
-      //   },
-      // );
-      setRequest("London");
-      getCoords("London");
+      
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const coords = {
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
+          };
+          getLocationName(coords);
+          setRequest("UserLocation");
+        },
+        (error) => {
+          console.error(error);
+          setRequest("London");
+          getCoords("London");
+        },
+      );
+  
       setIsLoading(false);
     }
-  }, [getCoords, request]);
+  }, [getCoords, getLocationName, request]);
 
   return (
     <>
