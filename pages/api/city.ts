@@ -15,8 +15,6 @@ export default async function handler(
     const response = await fetch(url);
     const data = await response.json();
 
-    console.log(data[0].name);
-
     res.status(200).json(data[0].name);
   } catch (error) {
     console.error(`Error: ${error}`);
