@@ -1,12 +1,14 @@
 import { ChangeEvent } from "react";
 
 type SearchBarProps = {
+  currentLocation: string;
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
   getCoords: (e: any) => void; 
   isLoading: boolean;
 };
 
 export default function SearchBar({
+  currentLocation,
   handleChange,
   getCoords,
   isLoading,
@@ -16,7 +18,7 @@ export default function SearchBar({
       <input
         type="text"
         id="first_name"
-        placeholder="London"
+        placeholder={currentLocation ?? "London"}
         onChange={(e) => handleChange(e)}
         className="border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5 w-80"
       />

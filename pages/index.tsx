@@ -118,6 +118,7 @@ export default function Home() {
               handleChange={handleChange}
               getCoords={getCoords}
               isLoading={isLoading}
+              currentLocation={location?.city || ""}
             />
             {forecast && location && previsions && (
               <div className="flex flex-col md:flex-row">
