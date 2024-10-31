@@ -40,7 +40,7 @@ export default function TodayCard({ location, forecast }: TodayCardProps) {
     <div className="flex flex-col justify-around mt-5 md:m-5 p-8 border border-gray-300 rounded-lg bg-white">
       <div className="pb-6 gap-6">
         <div className="flex justify-center">
-          <h1 className="text-9xl">{Math.round(today.temp)}°</h1>
+          <h1 className={`text-9xl ${today.temp > 10 ? "text-orange" : "text-pursian-blue"}`}>{Math.round(today.temp)}°</h1>
           <p className="text-7xl self-center">
             {handleIcon(today.weather[0].main)}
           </p>
@@ -53,7 +53,7 @@ export default function TodayCard({ location, forecast }: TodayCardProps) {
         <p className="">Min: {Math.round(todayPrevision.temp.min)}°</p>
         <p className="">Max: {Math.round(todayPrevision.temp.max)}°</p>
         <p className="">Humidity: {Math.round(today.humidity)}%</p>
-        <h2 className="text-blue-500 text-4xl font-bold">{`${location.city}, ${location.country}`}</h2>
+        <h2 className={`text-blue-500 text-4xl font-bold ${today.temp > 10 ? "text-pursian-blue" : "text-orange"}`}>{`${location.city}, ${location.country}`}</h2>
       </div>
     </div>
   );

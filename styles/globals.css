@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  background-image: url("../public/sky.jpg");
+  background-image: url("../public/view.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;

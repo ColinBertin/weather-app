@@ -12,7 +12,13 @@ module.exports = {
     maxWidth: {
       '1/2': '50%',
     },
-    extend: {},
+    extend: {
+      colors: {
+        'white':'#f1f5f9',
+        'pursian-blue':'#3B5BA5',
+        'orange':'#E87A5D',
+      }
+    },
   },
   plugins: [],
 }
