@@ -18,19 +18,60 @@ export default function TodayCard({ location, forecast }: TodayCardProps) {
   const { today, todayPrevision } = forecast;
 
   const handleIcon = (condition: string) => {
-    switch (condition) {
-      case "Thunderstorm":
+    const d = condition.toLowerCase();
+    
+    switch (true) {
+      case d.includes("thunderstorm"):
         return <TiWeatherStormy />;
-      case "Drizzle":
+
+      case d.includes("drizzle"):
         return <TiWeatherShower />;
-      case "Rain":
+
+      case d.includes("light rain") || d.includes("moderate rain"):
+        return <TiWeatherShower />;
+
+      case d.includes("heavy intensity rain") ||
+        d.includes("very heavy rain") ||
+        d.includes("extreme rain"):
         return <TiWeatherDownpour />;
-      case "Snow":
+
+      case d.includes("freezing rain"):
+        return <TiWeatherDownpour />;
+
+      case d.includes("snow") ||
+        d.includes("sleet") ||
+        d.includes("light shower sleet") ||
+        d.includes("shower sleet") ||
+        d.includes("light rain and snow") ||
+        d.includes("rain and snow") ||
+        d.includes("light shower snow") ||
+        d.includes("shower snow") ||
+        d.includes("heavy shower snow"):
         return <TiWeatherSnow />;
-      case "Clear":
+
+      // case d.includes("mist") ||
+      //   d.includes("smoke") ||
+      //   d.includes("haze") ||
+      //   d.includes("fog") ||
+      //   d.includes("sand") ||
+      //   d.includes("dust") ||
+      //   d.includes("volcanic ash") ||
+      //   d.includes("squalls"):
+      //   return <TiWeatherMist />;
+
+      case d.includes("tornado"):
+        return <TiWeatherWindy />;
+
+      case d.includes("clear sky"):
         return <TiWeatherSunny />;
-      case "Clouds":
+
+      case d.includes("few clouds") ||
+        d.includes("scattered clouds") ||
+        d.includes("broken clouds") ||
+        d.includes("overcast clouds") ||
+        d.includes("cloud"):
         return <TiWeatherCloudy />;
+
       default:
         return <TiWeatherWindy />;
     }
