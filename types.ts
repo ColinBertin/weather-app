@@ -6,7 +6,7 @@ export type Location = {
 export type Prevision = {
   dt: number;
   humidity: number;
-  weather: { main: string }[];
+  weather: { main: string, description: string }[];
   temp: { min: number; max: number };
 };
 
